@@ -89,9 +89,11 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   fprintf(outputFile, "Micro-ops: %" PRIi64 "\n", totalMicroops);
   fprintf(outputFile, "Macro-ops: %" PRIi64 "\n", totalMacroops);
-  for(int i = 0; i < sizeof(micorPerMacro)/sizeof(uint32_t); i++)
+  totalMacroops = 0;
+  for(uint32_t i = 0; i < sizeof(micorPerMacro)/sizeof(uint32_t); i++)
   {
 	  fprintf(outputFile, "Micro/Macro count: %" PRIi32 "\n", micorPerMacro[i]);
+	  totalMacroops += micorPerMacro[i];
   }
   
 
