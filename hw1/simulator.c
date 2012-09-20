@@ -95,6 +95,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  fprintf(outputFile, "Micro/Macro count: %" PRIi32 "\n", micorPerMacro[i]);
 	  totalMacroops += micorPerMacro[i];
   }
+  fprintf(outputFile, "sum of Macro: %ld\r\n", totalMacroops);
   
 
 }
