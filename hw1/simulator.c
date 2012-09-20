@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <map>
 
 void simulate(FILE* inputFile, FILE* outputFile)
 {
@@ -30,7 +31,10 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   int64_t totalMicroops = 0;
   int64_t totalMacroops = 0;
-  
+  std::map<uint32_t, uint64_t> m_mapBitCnt;
+  std::map<uint32_t, uint64_t>::iterator ItrBitCnt;
+  int64_t branchDist = 0;
+  int32_t bitForBranchDist = 0;
   fprintf(outputFile, "Processing trace...\n");
   
   while (true) {
@@ -76,13 +80,25 @@ void simulate(FILE* inputFile, FILE* outputFile)
     // For each micro-op
     totalMicroops++;
 	isnCnt++;
-
     // For each macro-op:
     if (microOpCount == 1) {
       totalMacroops++;
 	  micorPerMacro[isnCnt-1]++;
 	  isnCnt = 0;
     }
+
+	//branch distances:
+	if(targetAddressTakenBranch != 0)
+	{
+		branchDist = abs(targetAddressTakenBranch - instructionAddress);
+		bitForBranchDist = 2 + floor(log(branchDist)/_logb(2));
+		if(m_mapBitCnt.find(bitForBranchDist) == m_mapBitCnt.end())
+		{
+			m_mapBitCnt.insert(std::pair<uint32_t, uint64_t>(bitForBranchDist, 0));
+		}
+		else
+			(*m_mapBitCnt.find(bitForBranchDist)).second++;
+	}
   }
   
   fprintf(outputFile, "Processed %" PRIi64 " trace records.\n", totalMicroops);
@@ -96,6 +112,11 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  totalMacroops += micorPerMacro[i];
   }
   fprintf(outputFile, "sum of Macro: %ld\r\n", totalMacroops);
+
+  for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
+  {
+	  printf("Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
+  }
   
 
 }
