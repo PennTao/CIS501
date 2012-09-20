@@ -25,7 +25,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
   uint64_t targetAddressTakenBranch;
   char macroOperation[12];
   char microOperation[23];
-
+  int micorPerMacro[5] = {0,0,0,0,0};
   int64_t totalMicroops = 0;
   int64_t totalMacroops = 0;
   
