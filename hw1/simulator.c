@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <map>
-
+#include <math.h>
 void simulate(FILE* inputFile, FILE* outputFile)
 {
   // See the documentation to understand what these variables mean.
@@ -91,7 +91,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	if(targetAddressTakenBranch != 0)
 	{
 		branchDist = abs(targetAddressTakenBranch - instructionAddress);
-		bitForBranchDist = 2 + floor(log(branchDist)/_logb(2));
+		bitForBranchDist = 2 + floor(log(branchDist)/log(2));
 		if(m_mapBitCnt.find(bitForBranchDist) == m_mapBitCnt.end())
 		{
 			m_mapBitCnt.insert(std::pair<uint32_t, uint64_t>(bitForBranchDist, 0));
