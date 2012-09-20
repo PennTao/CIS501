@@ -25,7 +25,9 @@ void simulate(FILE* inputFile, FILE* outputFile)
   uint64_t targetAddressTakenBranch;
   char macroOperation[12];
   char microOperation[23];
-  int micorPerMacro[5] = {0,0,0,0,0};
+  int32_t micorPerMacro[5] = {0,0,0,0,0};
+  int32_t isnCnt = 0;
+
   int64_t totalMicroops = 0;
   int64_t totalMacroops = 0;
   
@@ -73,10 +75,13 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
     // For each micro-op
     totalMicroops++;
+	isnCnt++;
 
     // For each macro-op:
     if (microOpCount == 1) {
       totalMacroops++;
+	  micorPerMacro[isnCnt-1]++;
+	  isnCnt = 0;
     }
   }
   
@@ -84,6 +89,11 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   fprintf(outputFile, "Micro-ops: %" PRIi64 "\n", totalMicroops);
   fprintf(outputFile, "Macro-ops: %" PRIi64 "\n", totalMacroops);
+  for(int i = 0; i < sizeof(micorPerMacro)/sizeof(uint32_t); i++)
+  {
+	  fprintf(outputFile, "Micro/Macro count: %" PRIi32 "\n", micorPerMacro[i]);
+  }
+  
 
 }
 
