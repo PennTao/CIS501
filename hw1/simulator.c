@@ -45,6 +45,8 @@ void simulate(FILE* inputFile, FILE* outputFile)
   float instructionPercent = 0.0f;
   int64_t branchDist = 0;
   int32_t bitForBranchDist = 0;
+
+  uint64_t extraInstruction = 0;
   fprintf(outputFile, "Processing trace...\n");
   
   while (true) {
@@ -148,7 +150,9 @@ void simulate(FILE* inputFile, FILE* outputFile)
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
+	  extraInstruction += (floor(ItrBitCnt->first /8) - 1) * ItrBitCnt->second;
   }
+  fprintf(outputFile,"extra instructions: %ld\r\n", extraInstruction);
   for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
   {
 	  instructionPercent = (float)instructionClassifier[i] / (float)totalMicroops;
