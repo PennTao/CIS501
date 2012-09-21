@@ -119,11 +119,11 @@ void simulate(FILE* inputFile, FILE* outputFile)
 		instructionClassifier[STORES]++;
 	}
 	
-	else if((targetAddressTakenBranch != 0) && (conditionRegister ='-'))
+	else if((targetAddressTakenBranch != 0) && (conditionRegister == '-'))
 	{
 		instructionClassifier[UBRANCH]++;
 	}
-	else if((targetAddressTakenBranch != 0) && (conditionRegister ='R'))
+	else if((targetAddressTakenBranch != 0) && (conditionRegister =='R'))
 	{
 		instructionClassifier[CBRANCH]++;
 	}
