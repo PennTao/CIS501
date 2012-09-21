@@ -170,7 +170,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  fprintf(outputFile, "instruction type%d: %ld, %f\r\n", i, instructionClassifier[i], instructionPercent);
   }
   fprintf(outputFile, "Operation Fusion Pairs: %ld	%f\r\n", fusionPair, 2 * (float)fusionPair / (float)totalMicroops);
-
+  fprintf(outputFile, "fusion performance improvement: %f%%\r\n",100 * (1 - (float)(totalMicroops - fusionPair) / (float)totalMicroops));
 }
 
 int main(int argc, char *argv[]) 
