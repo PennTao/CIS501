@@ -24,6 +24,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
   int32_t sourceRegister2;
   int32_t destinationRegister;
   char conditionRegister;
+  char  lastConditionRegister;
   char TNnotBranch;
   char loadStore;
   int64_t immediate;
@@ -47,6 +48,8 @@ void simulate(FILE* inputFile, FILE* outputFile)
   int32_t bitForBranchDist = 0;
 
   uint64_t extraInstruction = 0;
+
+  uint64_t fusionPair = 0;
   fprintf(outputFile, "Processing trace...\n");
   
   while (true) {
@@ -128,11 +131,15 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	else if((targetAddressTakenBranch != 0) && (conditionRegister =='R'))
 	{
 		instructionClassifier[CBRANCH]++;
+		if (lastConditionRegister == 'W')
+			fusionPair++;
 	}
 	else
 	{
 		instructionClassifier[OTHER]++;
 	}
+
+	lastConditionRegister = conditionRegister;
   }
   
   fprintf(outputFile, "Processed %" PRIi64 " trace records.\n", totalMicroops);
@@ -162,6 +169,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  instructionPercent = (float)instructionClassifier[i] / (float)totalMicroops;
 	  fprintf(outputFile, "instruction type%d: %ld, %f\r\n", i, instructionClassifier[i], instructionPercent);
   }
+  fprintf(outputFile, "Operation Fusion Pairs: %ld	%f\r\n", fusionPair, 2 * (float)fusionPair / (float)totalMicroops);
 
 }
 
