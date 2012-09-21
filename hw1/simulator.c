@@ -106,7 +106,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 		bitForBranchDist = 2 + floor(log(branchDist)/log(2));
 		if(m_mapBitCnt.find(bitForBranchDist) == m_mapBitCnt.end())
 		{
-			m_mapBitCnt.insert(std::pair<uint32_t, uint64_t>(bitForBranchDist, 0));
+			m_mapBitCnt.insert(std::pair<uint32_t, uint64_t>(bitForBranchDist, 1));
 		}
 		else
 			(*m_mapBitCnt.find(bitForBranchDist)).second++;
@@ -150,7 +150,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
-	  extraInstruction += (floor(ItrBitCnt->first /8) - 1) * ItrBitCnt->second;
+	  extraInstruction += ((floor(ItrBitCnt->first /8) - 1) > 0?(floor(ItrBitCnt->first /8) - 1):0) * ItrBitCnt->second;
   }
   fprintf(outputFile,"extra instructions: %ld\r\n", extraInstruction);
   for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
