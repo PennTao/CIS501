@@ -151,8 +151,8 @@ void simulate(FILE* inputFile, FILE* outputFile)
   }
   for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
   {
-	  instructionPercent = instructionClassifier[i] / totalMicroops;
-	  fprintf(outputFile, "instruction type%d: %ld, %f", i, instructionClassifier[i], instructionPercent);
+	  instructionPercent = (float)instructionClassifier[i] / (float)totalMicroops;
+	  fprintf(outputFile, "instruction type%d: %ld, %f\r\n", i, instructionClassifier[i], instructionPercent);
   }
 
 }
