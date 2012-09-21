@@ -1,4 +1,10 @@
 #define __STDC_FORMAT_MACROS
+
+#define LOADS	0
+#define STORES	1
+#define UBRANCH	3
+#define CBRANCH	4
+#define OTHER	5
 #include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
@@ -31,8 +37,12 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   int64_t totalMicroops = 0;
   int64_t totalMacroops = 0;
+ 
   std::map<uint32_t, uint64_t> m_mapBitCnt;
   std::map<uint32_t, uint64_t>::iterator ItrBitCnt;
+
+  uint64_t instructionClassifier[5] = {0,0,0,0,0};
+  float instructionPercent = 0.0f;
   int64_t branchDist = 0;
   int32_t bitForBranchDist = 0;
   fprintf(outputFile, "Processing trace...\n");
@@ -99,6 +109,28 @@ void simulate(FILE* inputFile, FILE* outputFile)
 		else
 			(*m_mapBitCnt.find(bitForBranchDist)).second++;
 	}
+	//Instruction classifier:
+	if(loadStore == 'L')
+	{
+		instructionClassifier[LOADS]++;
+	}
+	else if(loadStore == 'S')
+	{
+		instructionClassifier[STORES]++;
+	}
+	
+	else if((targetAddressTakenBranch != 0) && (conditionRegister ='-'))
+	{
+		instructionClassifier[UBRANCH]++;
+	}
+	else if((targetAddressTakenBranch != 0) && (conditionRegister ='R'))
+	{
+		instructionClassifier[CBRANCH]++;
+	}
+	else
+	{
+		instructionClassifier[OTHER]++;
+	}
   }
   
   fprintf(outputFile, "Processed %" PRIi64 " trace records.\n", totalMicroops);
@@ -115,9 +147,13 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
-	  printf("Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
+	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
   }
-  
+  for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
+  {
+	  instructionPercent = instructionClassifier[i]\totalMicroops;
+	  fprintf(outputFile, "instruction type%d: %ld, %f", i, instructionClassifier[i], instructionPercent);
+  }
 
 }
 
