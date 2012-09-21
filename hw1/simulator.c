@@ -2,9 +2,9 @@
 
 #define LOADS	0
 #define STORES	1
-#define UBRANCH	3
-#define CBRANCH	4
-#define OTHER	5
+#define UBRANCH	2
+#define CBRANCH	3
+#define OTHER	4
 #include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
