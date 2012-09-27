@@ -152,29 +152,35 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
 	lastConditionRegister = conditionRegister;
   }
-  aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
+ 
   fprintf(outputFile, "Processed %" PRIi64 " trace records.\n", totalMicroops);
 
   fprintf(outputFile, "Micro-ops: %" PRIi64 "\n", totalMicroops);
   fprintf(outputFile, "Macro-ops: %" PRIi64 "\n", totalMacroops);
-  fprintf(outputFile, "Average Micro/Macro: %4f\n", float(totalMicroops)/(float)totalMacroops);
+
+  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);
   totalMacroops = 0;
   for(uint32_t i = 0; i < sizeof(micorPerMacro)/sizeof(uint32_t); i++)
   {
 	  fprintf(outputFile, "Micro/Macro = %d count: %" PRIi32 "\n",i+1, micorPerMacro[i]);
 	  totalMacroops += micorPerMacro[i];
   }
-  fprintf(outputFile, "Average Micro/Macro: %4f\n", float(totalMicroops)/(float)totalMacroops);
+  fprintf(outputFile, "total Macro: %ld\n", totalMacroops);
 
-  fprintf(outputFile, "Average instruction size: %4f\r\n", aveIsnSize);
+  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);]
+  
+  aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
+  fprintf(outputFile, "Total instruction size: %ld\r\n", totalIsnSize);
+  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
   totalIsnSize = 0;
   for(ItrIsnSizeDist = m_mapIsnSizeDistribution.begin(); ItrIsnSizeDist != m_mapIsnSizeDistribution.end(); ++ItrIsnSizeDist)
   {
 	  fprintf(outputFile,"Instruction size: %d	Cnt: %ld\r\n",ItrIsnSizeDist->first, ItrIsnSizeDist->second);
 	  totalIsnSize += ItrIsnSizeDist->first * ItrIsnSizeDist->second;
   }
+  fprintf(outputFile, "Total instruction size: %ld\r\n", totalIsnSize);
   aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
-  fprintf(outputFile, "Average instruction size: %4f\r\n", aveIsnSize);
+  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
  
   
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
@@ -190,10 +196,10 @@ void simulate(FILE* inputFile, FILE* outputFile)
   for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
   {
 	  instructionPercent = 100 * (float)instructionClassifier[i] / (float)totalMicroops;
-	  fprintf(outputFile, "instruction type%d: %ld,	%4f%%\r\n", i, instructionClassifier[i], instructionPercent);
+	  fprintf(outputFile, "instruction type%d: %ld,	%f%%\r\n", i, instructionClassifier[i], instructionPercent);
   }
-  fprintf(outputFile, "Operation Fusion Pairs: %ld	%4f%%\r\n", fusionPair, 200 * (float)fusionPair / (float)totalMicroops);
-  fprintf(outputFile, "fusion performance improvement: %4f%%\r\n",100 * (1 - (float)(totalMicroops - fusionPair) / (float)totalMicroops));
+  fprintf(outputFile, "Operation Fusion Pairs: %ld	%f%%\r\n", fusionPair, 200 * (float)fusionPair / (float)totalMicroops);
+  fprintf(outputFile, "fusion performance improvement: %f%%\r\n",100 * (1 - (float)(totalMicroops - fusionPair) / (float)totalMicroops));
 }
 
 int main(int argc, char *argv[]) 
