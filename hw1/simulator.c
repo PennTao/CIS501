@@ -35,7 +35,8 @@ void simulate(FILE* inputFile, FILE* outputFile)
   char microOperation[23];
   int32_t micorPerMacro[5] = {0,0,0,0,0};
   int32_t isnCnt = 0;
-
+  uint64_t totalIsnSize = 0;
+  float aveIsnSize =0.0f;
   int64_t totalMicroops = 0;
   int64_t totalMacroops = 0;
  
@@ -97,6 +98,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	isnCnt++;
     // For each macro-op:
     if (microOpCount == 1) {
+		totalIsnSize += (fallthroughPC - instructionAddress);
       totalMacroops++;
 	  micorPerMacro[isnCnt-1]++;
 	  isnCnt = 0;
@@ -141,7 +143,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
 	lastConditionRegister = conditionRegister;
   }
-  
+  aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
   fprintf(outputFile, "Processed %" PRIi64 " trace records.\n", totalMicroops);
 
   fprintf(outputFile, "Micro-ops: %" PRIi64 "\n", totalMicroops);
