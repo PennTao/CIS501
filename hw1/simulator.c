@@ -164,13 +164,19 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  fprintf(outputFile, "Micro/Macro = %d count: %" PRIi32 "\n",i+1, micorPerMacro[i]);
 	  totalMacroops += micorPerMacro[i];
   }
-  fprintf(outputFile, "sum of Macro: %ld\r\n", totalMacroops);
-  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
+  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);
 
+  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
+  totalIsnSize = 0;
   for(ItrIsnSizeDist = m_mapIsnSizeDistribution.begin(); ItrIsnSizeDist != m_mapIsnSizeDistribution.end(); ++ItrIsnSizeDist)
   {
 	  fprintf(outputFile,"Instruction size: %d	Cnt: %ld\r\n",ItrIsnSizeDist->first, ItrIsnSizeDist->second);
+	  totalIsnSize += ItrIsnSizeDist->first * ItrIsnSizeDist->second;
   }
+  aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
+  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
+ 
+  
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
