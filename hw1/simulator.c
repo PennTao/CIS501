@@ -167,7 +167,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
   }
   fprintf(outputFile, "total Macro: %ld\n", totalMacroops);
 
-  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);]
+  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);
   
   aveIsnSize = (float)totalIsnSize / (float)totalMacroops;
   fprintf(outputFile, "Total instruction size: %ld\r\n", totalIsnSize);
