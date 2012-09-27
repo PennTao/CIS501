@@ -148,6 +148,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 
   fprintf(outputFile, "Micro-ops: %" PRIi64 "\n", totalMicroops);
   fprintf(outputFile, "Macro-ops: %" PRIi64 "\n", totalMacroops);
+  fprintf(outputFile, "Average Micro/Macro: %f\n", float(totalMicroops)/(float)totalMacroops);
   totalMacroops = 0;
   for(uint32_t i = 0; i < sizeof(micorPerMacro)/sizeof(uint32_t); i++)
   {
@@ -155,7 +156,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	  totalMacroops += micorPerMacro[i];
   }
   fprintf(outputFile, "sum of Macro: %ld\r\n", totalMacroops);
-
+  fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
