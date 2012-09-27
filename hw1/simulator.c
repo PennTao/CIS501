@@ -35,6 +35,7 @@ void simulate(FILE* inputFile, FILE* outputFile)
   char microOperation[23];
   int32_t micorPerMacro[5] = {0,0,0,0,0};
   int32_t isnCnt = 0;
+  uint32_t isnSize = 0;
   uint64_t totalIsnSize = 0;
   float aveIsnSize =0.0f;
   int64_t totalMicroops = 0;
@@ -42,7 +43,8 @@ void simulate(FILE* inputFile, FILE* outputFile)
  
   std::map<uint32_t, uint64_t> m_mapBitCnt;
   std::map<uint32_t, uint64_t>::iterator ItrBitCnt;
-
+  std::map<uint32_t, uint64_t> m_mapIsnSizeDistribution;
+  std::map<uint32_t, uint64_t>::iterator ItrIsnSizeDist;
   uint64_t instructionClassifier[5] = {0,0,0,0,0};
   float instructionPercent = 0.0f;
   int64_t branchDist = 0;
@@ -98,7 +100,14 @@ void simulate(FILE* inputFile, FILE* outputFile)
 	isnCnt++;
     // For each macro-op:
     if (microOpCount == 1) {
-		totalIsnSize += (fallthroughPC - instructionAddress);
+		isnSize = fallthroughPC - instructionAddress;
+		if(m_mapIsnSizeDistribution.find(isnSize) == m_mapIsnSizeDistribution.end())
+		{
+			m_mapIsnSizeDistribution.insert(std::pair<uint32_t,uint64_t>(isnSize,1));
+		}
+		else
+			(*m_mapIsnSizeDistribution.find(isnSize)).second++;
+		totalIsnSize += isnSize;
       totalMacroops++;
 	  micorPerMacro[isnCnt-1]++;
 	  isnCnt = 0;
@@ -157,6 +166,11 @@ void simulate(FILE* inputFile, FILE* outputFile)
   }
   fprintf(outputFile, "sum of Macro: %ld\r\n", totalMacroops);
   fprintf(outputFile, "Average instruction size: %f\r\n", aveIsnSize);
+
+  for(ItrIsnSizeDist = m_mapIsnSizeDistribution.begin(); ItrIsnSizeDist != m_mapIsnSizeDistribution.end(); ++ItrIsnSizeDist)
+  {
+	  fprintf(outputFile,"Instruction size: %d	Cnt: %ld\r\n",ItrIsnSizeDist->first, ItrIsnSizeDist->second);
+  }
   for(ItrBitCnt = m_mapBitCnt.begin(); ItrBitCnt != m_mapBitCnt.end(); ++ItrBitCnt)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
