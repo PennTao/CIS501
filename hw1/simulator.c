@@ -187,10 +187,9 @@ void simulate(FILE* inputFile, FILE* outputFile)
   {
 	  fprintf(outputFile,"Bit Length: %d	Cnt: %ld\r\n",ItrBitCnt->first, ItrBitCnt->second);
 	  //extraInstruction = extraInstruction + ((floor(ItrBitCnt->first /8) - 1) > 0?(floor(ItrBitCnt->first /8) - 1):0) * ItrBitCnt->second;
-	  if(ItrBitCnt->first >= 9 && ItrBitCnt->first <= 16)
+	  if(ItrBitCnt->first >= 9)
 		  extraInstruction += ItrBitCnt->second;
-	  else if(ItrBitCnt->first >= 17)
-		  extraInstruction += ItrBitCnt->second * 2;
+	  
   }
   fprintf(outputFile,"extra instructions: %ld\r\n", extraInstruction);
   for(int i = 0; i < sizeof(instructionClassifier)/sizeof(uint64_t); i++)
